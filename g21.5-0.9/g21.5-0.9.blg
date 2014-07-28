@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: g21.5-0.9.aux
+The style file: apj.bst
+Database file #1: citations.bib
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Warning--empty journal in bietenholz2008
+You've used 10 entries,
+            3085 wiz_defined-function locations,
+            704 strings with 6773 characters,
+and the built_in function-call counts, 5478 in all, are:
+= -- 450
+> -- 442
+< -- 3
++ -- 158
+- -- 169
+* -- 486
+:= -- 1027
+add.period$ -- 10
+call.type$ -- 10
+change.case$ -- 84
+chr.to.int$ -- 10
+cite$ -- 11
+duplicate$ -- 199
+empty$ -- 289
+format.name$ -- 177
+if$ -- 1068
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 9
+newline$ -- 34
+num.names$ -- 40
+pop$ -- 95
+preamble$ -- 1
+purify$ -- 84
+quote$ -- 0
+skip$ -- 165
+stack$ -- 0
+substring$ -- 215
+swap$ -- 8
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 90
+warning$ -- 1
+while$ -- 39
+width$ -- 0
+write$ -- 102
+(There was 1 warning)

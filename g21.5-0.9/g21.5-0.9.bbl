@@ -1,0 +1,52 @@
+\begin{thebibliography}{}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+
+\bibitem[{Bietenholz {et~al.}(2011)Bietenholz, Matheson, S.~Safi-Harb, \&
+  Bartel}]{bietenholz:deep}
+Bietenholz, M., Matheson, H., S.~Safi-Harb, C.~B., \& Bartel, N. 2011, Monthly
+  Notices of the Royal Astronomical Society, 412, 1221
+
+\bibitem[{Bietenholz \& Bartel(2008)}]{bietenholz2008}
+Bietenholz, M.~F., \& Bartel, N. 2008, 386, 1411
+
+\bibitem[{{Camilo} {et~al.}(2006){Camilo}, {Ransom}, {Gaensler}, {Slane},
+  {Lorimer}, {Reynolds}, {Manchester}, \& {Murray}}]{camilo2006}
+{Camilo}, F., {Ransom}, S.~M., {Gaensler}, B.~M., {et~al.} 2006, \apj, 637, 456
+
+\bibitem[{{de Rosa} {et~al.}(2009){de Rosa}, {Ubertini}, {Campana}, {Bazzano},
+  {Dean}, \& {Bassani}}]{derosa2009}
+{de Rosa}, A., {Ubertini}, P., {Campana}, R., {et~al.} 2009, Monthly Notices of
+  the Royal Astronomical Society, 393, 527
+
+\bibitem[{{Djannati-Ata{\u i}} {et~al.}(2008){Djannati-Ata{\u i}}, {de Jager},
+  {Terrier}, \& {et al.}}]{collaboration2007new}
+{Djannati-Ata{\u i}}, A., {de Jager}, O.~C., {Terrier}, R., \& {et al.} 2008,
+  International Cosmic Ray Conference, 2, 823
+
+\bibitem[{Matheson \& Safi-Harb(2010)}]{matheson:plerionic}
+Matheson, H., \& Safi-Harb, S. 2010, Astrophysical Journal, 724, 572
+
+\bibitem[{{Nynka} {et~al.}(2014){Nynka}, {Hailey}, {Reynolds}, {An},
+  {Baganoff}, {Boggs}, {Christensen}, {Craig}, {Gotthelf}, {Grefenstette},
+  {Harrison}, {Krivonos}, {Madsen}, {Mori}, {Perez}, {Stern}, {Wik}, {Zhang},
+  \& {Zoglauer}}]{nustar}
+{Nynka}, M., {Hailey}, C.~J., {Reynolds}, S.~P., {et~al.} 2014, Astrophysical
+  Journal, 789, 72
+
+\bibitem[{{Safi-Harb} {et~al.}(2000){Safi-Harb}, {Harrus}, {Petre},
+  {Koptsevich}, {Sanwal}, \& {Pavlov}}]{harb2000}
+{Safi-Harb}, S., {Harrus}, I.~M., {Petre}, R., {et~al.} 2000, in Bulletin of
+  the American Astronomical Society, Vol.~32, American Astronomical Society
+  Meeting Abstracts \#196, 736
+
+\bibitem[{Safi-Harb {et~al.}(2001)Safi-Harb, Harrus, Petre, Pavlov, Koptsevich,
+  \& Sanwal}]{harb1}
+Safi-Harb, S., Harrus, I.~M., Petre, R., {et~al.} 2001, The Astrophysical
+  Journal, 561, 308
+
+\bibitem[{Salter {et~al.}(1989)Salter, Reynolds, Hogg, Payne, \&
+  Rhodes}]{salter:giga1}
+Salter, C., Reynolds, S., Hogg, D., Payne, J., \& Rhodes, P. 1989,
+  Astrophysical Journal, 338, 171
+
+\end{thebibliography}

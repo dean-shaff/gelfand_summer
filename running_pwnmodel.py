@@ -4,7 +4,7 @@ import subprocess
 import time
 import datetime
 #Parameters=====================
-tstep = 100 #time step (only takes integer values) 21-6-2014 changed tstep from 1000 to 100
+tstep = 1000 #time step (only takes integer values) 21-6-2014 changed tstep from 1000 to 100
 esn = 1 #supernova explosion energy
 mej = 8 #ejecta mass
 nism = 1 #ISM density 

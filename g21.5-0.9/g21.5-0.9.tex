@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage{times} %typeface
+\usepackage{breakcites} %for citations
+\usepackage{mathtools} %to write equations
+\usepackage{natbib} %this makes it so it writes 'et al'
+\usepackage[margin=1.3in]{geometry} %make the margins a little wider
+\usepackage{longtable}
+
+\begin{document}
+\bibliographystyle{apj}
+\title{Observed Characteristics of G21.5-0.9 Pulsar Wind Nebula}
+\author{Dean Shaff\\
+NYUAD\\
+dshaff001@gmail.com}
+\date{\today}
+\maketitle
+{ %have to group the 'tabular'
+\centering % this is so the table is centered
+\begin{longtable}{| p{4cm} | p{5cm} | p{4.7cm} |} %specifying the size of the columns
+\hline
+\multicolumn{3}{| c |}{\textbf{G21.5-0.9}} \\ %four column wide title thats centered between two vertical lines
+\hline
+\textbf{Property} & \textbf{Value} & \textbf{Citations} \\
+\hline
+PWN radius & $40"$ & \cite{matheson:plerionic} \\
+\hline
+SNR radius & $150"$ & \cite{matheson:plerionic} \\
+\hline
+Spin down Luminosity & $3.3\times10^{37} \: \frac{erg}{s}$ & \cite{camilo2006}\\
+\hline
+Period & $61.86\:ms$& \cite{camilo2006}\\
+\hline
+Surface Magnetic Field & $3.6\times10^{12} \:G$ & \cite{camilo2006}\\
+\hline
+Distance & $4.7\pm 0.4\:kpc$ & \cite{camilo2006} \\
+\hline
+Expansion Speed & $910\pm 160 \: \frac{km}{s}$ & \cite{bietenholz2008} \\
+\hline
+Angular Expansion Speed & $ 38.39\pm 6.75\: \frac{mas}{yr} $ & \cite{bietenholz2008} \\
+\hline
+Characteristic Age & $4.85 \: kyr$ & \cite{camilo2006} \\
+\hline
+1.43 GHz total flux density & $7\pm 0.4\:Jy$ & \cite{bietenholz:deep} \\
+\hline
+4.7 GHz total flux density & $6.7\pm 0.3\:Jy $ & \cite{bietenholz2008} \\
+\hline
+15 GHz total flux density & $5.6\pm 0.3\:Jy$ & \cite{salter:giga1}\\
+\hline
+84.2 GHz total flux density & $3.9 \pm 0.7\:Jy$ & \cite{salter:giga1}\\
+\hline
+0.5 - 10 keV unabsorbed flux\footnote{The first reported value is calculated, using the fact that 85\% of total unabsorbed flux comes from $r\leq40"$ inner core. Note the discrepancy between values.}& \vtop{\hbox{\strut $9.35\times10^{-11} \frac{erg}{s\:cm^2} $}\hbox{\strut $7.5\times10^{-11} \frac{erg}{s\:cm^2}$}} & \vtop{\hbox{\strut \cite{harb1}}\hbox{\strut \cite{harb2000}}}\\
+\hline
+0.5 - 10 keV photon index\footnote{Using a broken power law. For $r \leq 40"$ using $N_H = 1.97\times10^{22}\:cm^{-2}$}  & \vtop{\hbox{\strut $\Gamma_1 = 1.4$}\hbox{\strut $\Gamma_2 = 1.9$}\hbox{\strut $E_{break} = 2.7\:keV$}\hbox{\strut $N_H = 1.97\times 10^{22}\:cm^{-2} $}} & \cite{harb2000}\\
+\hline
+2 - 8 keV flux, broken power law $(r < 165")$ & $5.27\pm 0.08\times10^{-11} \frac{erg}{s\:cm^2}$ & ~\cite{nustar} \\
+\hline
+3 - 45 keV photon index $(r \leq 30")$ & \vtop{\hbox{\strut $\Gamma_1 = 1.852 \pm 0.011$ }\hbox{\strut $\Gamma_2 = 2.099 ^{+0.019}_{-0.017}$}\hbox{\strut $E_{break} = 9.0^{+0.6}_{-0.4}\:keV$}} & \cite{nustar} \\ 
+\hline 
+3 - 45 keV photon index $(30" < r \leq 60")$ & \vtop{\hbox{\strut $\Gamma_1 = 1.98^{+0.02}_{-0.03} $ }\hbox{\strut $\Gamma_2 = 2.14 ^{+0.02}_{-0.03}$}\hbox{\strut $E_{break} = 9.74\pm 1.0\:keV$}} & \cite{nustar} \\ 
+\hline 
+20 - 40 keV unabsorbed flux\footnote{Flux energy value calculated using NASA's WebPIMMS tools with $\Gamma = 2.2\pm0.1$ (20-100 keV photon index)} & \vtop{\hbox{\strut $0.28 \pm 0.02 \frac{ct}{s}$}\hbox{\strut $1.28 \pm 0.1\times10^{-11} \frac{erg}{s\:cm^2}$ }} & \cite{matheson:plerionic} \\
+\hline
+40 - 100 keV unabsorbed flux\footnote{Flux energy value calculated using NASA's WebPIMMS tools with $\Gamma = 2.2\pm0.1$ (20-100 keV photon index)}  & \vtop{\hbox{\strut $0.26 \pm 0.02 \frac{ct}{s}$}\hbox{\strut $2.19^{+0.14}_{-0.15} \times10^{-11} \frac{erg}{s\:cm^2}$}}  & \cite{matheson:plerionic} \\
+\hline
+20 - 100 keV flux & $5.2 \times10^{-11} \frac{erg}{s\:cm^2}$ &  \cite{derosa2009} \\
+\hline
+20 - 100 keV photon index & $2.2 \pm 0.1$ & \cite{derosa2009} \\
+\hline
+1 - 10 TeV photon index & $2.08 \pm 0.22$ & \cite{collaboration2007new} \\
+\hline
+1 TeV photon density & \footnotesize$4.59 \pm 1.00\times10^{-13} \frac{photons}{TeV\:s\:cm^2}$ & \cite{collaboration2007new}\\
+\hline
+
+\end{longtable}
+}
+\bibliography{citations}
+
+\end{document}

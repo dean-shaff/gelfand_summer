@@ -45,6 +45,11 @@ numpy habits.
 Gelfand says that I should make a color plot of chisquared values for my linear fit, with different values of 
 c and m. I'm having trouble making this bad boy work. 
 '''
+'''
+25-6-2014
+I seemed to have resolved chi square issues. It was just a matter of fucking around with the scale in order to 
+get correct values. That and dealing with the np.arange() function.
+'''
 def main():
 	os.chdir(path_to_gelfand)
 	filephot = pyfits.open(phot)
@@ -128,28 +133,29 @@ def main():
 		name = ['P_2','Expected Gamma Value']
 		y_data = [p_2,gamma_expected]
 		photon_index_graph = Graphs('Photon Index vs Time in 2-10 keV range','Time (years)','Photon Indices',name,y_error_names='Photon Indices')
-		photon_index_graph.create_figure_logxory(time,y_data,y_lim=[1,4],error_ydata=photon_indices,y_error=deviations)
+		fig, ax = photon_index_graph.create_figure_logxory(time,y_data,y_lim=[1,4],error_ydata=photon_indices,y_error=deviations)
+		plt.show()
 	#photon_index()
 	def spectral_index():
 		 #Lumonisity (Flux) Density L_nu = C (nu / nu_0) ^ alpha
 		 #log(L_nu) = log(C) + alpha*(log(nu/nu_0))
 		 nu_0 = float(10**9) #GHz 
 		 av_freq = dataphot1.field(3)
-		 av_freq_radio = [i for i in av_freq if i >= 10**9 and i <= 10**10]
-		 indices_radio = [int(i) for i in xrange(0,len(av_freq)) if av_freq[i] >= 10**9 and av_freq[i] <= 10**10]
-		 log_radio = np.array([float(np.log(i/nu_0)) for i in av_freq_radio])
+		 av_freq_radio = np.array([i for i in av_freq if i >= 10**9 and i <= 10**10])
+		 indices_radio = np.array([int(i) for i in xrange(0,len(av_freq)) if av_freq[i] >= 10**9 and av_freq[i] <= 10**10])
+		 log_radio = np.log(av_freq_radio/nu_0)
 		 #empty lists
 		 error = []
-		 alphas = []
-		 deviations = []
+		 alphas = np.zeros(len(dataphot2))
+		 deviations = np.zeros(len(dataphot2))
+		 ones = np.ones(indices_radio.size)
 		 for index in xrange(0,len(dataphot2)):
-		 	luminosities = dataphot2[index]
-		 	luminositiesradio = np.asarray([luminosities[i] for i in indices_radio])
-		 	logluminosities = np.asarray([np.log(luminosities[i]) for i in indices_radio])
-		 	ones = [1 for i in indices_radio]
-		 	dummy = np.vstack((log_radio,ones))
-		 	fit_matrix = np.transpose(dummy)
-		 	m,c = linalg.lstsq(fit_matrix,logluminosities)[0]
+		 	luminosities = np.array(dataphot2[index])
+		 	luminositiesradio = np.array([luminosities[i] for i in indices_radio])
+		 	logluminosities = np.log(luminositiesradio)
+		 	fit_matrix = np.transpose(np.vstack((log_radio,ones)))
+		 	m,c = linalg.lstsq(fit_matrix,logluminosities)[0] 
+		 	alphas[index] = m
 		 	#Checking======================
 		 	def plot_log(t):
 		 		if int(index) == int(t):
@@ -176,9 +182,8 @@ def main():
 			for i in xrange(0,len(logluminosities)):
 				alpha_actual = (logluminosities[i] - c)/log_radio[i]
 				error.append(float(np.absolute(alpha_actual-m)))
-			deviations.append(float(np.std(error)))	
+			deviations[index] = float(np.std(error))
 			error = []
-		 	alphas.append(np.absolute(m))
 		 	#chi-squared graph
 		 	def chisquaregraph(t):
 		 		if int(index) == int(t):
@@ -188,18 +193,16 @@ def main():
 		 			N = int(15)
 		 			mesh_size = xrange(-N,N)
 		 			chisquares = np.zeros((len(mesh_size),len(mesh_size)))
-		 			increment_m = float(np.absolute(m_new/(N**2)))
-		 			increment_c = float(np.absolute(c_new/(N**3.2)))
+		 			increment_m = float(np.absolute(m_new/(N**1.3)))
+		 			increment_c = float(np.absolute(c_new/(N**2.75)))
 		 			c_list = np.arange(c_new-(N)*increment_c,c_new+(N)*increment_c,increment_c)
 		 			m_list = np.arange(m_new-(N)*increment_m,m_new+(N)*increment_m,increment_m)
 		 			for i in mesh_size:
 		 				delta_c = float(i*increment_c)
-		 				#c_list[i] = c_new + delta_c
 		 				i_index = i + N
 		 				for j in mesh_size:
 		 					j_index = j + N
 		 					delta_m = float(j*increment_m)
-		 					#m_list[j] = m_new + delta_m
 		 					expected = [float((c_new+delta_c)+((m_new+delta_m)*i)) for i in log_radio]
 		 					middle = np.array([(i[0]-i[1])**2 for i in zip(expected,logluminosities1)])
 		 					chisquares[i_index,j_index] = np.sum(middle)
@@ -207,20 +210,25 @@ def main():
 			 		fig = plt.figure(figsize=(14,8))
 			 		ax = fig.add_subplot(111)
 			 		plt.axis([np.min(m_list),np.max(m_list),np.min(c_list),np.max(c_list)])
-			 		plt.title('C = {}, M = {}'.format(c_new,m_new))
+			 		plt.title(r"$\chi^2$ for different values of $\lnC$ and $\alpha$", fontsize=24)
+			 		ax.set_xlabel(r"$\alpha$",fontsize=20)
+			 		ax.set_ylabel(r"$\lnC$",fontsize=20)
 			 		cax = ax.pcolormesh(M,C,chisquares,cmap='binary')
 			 		bar = fig.colorbar(cax)
+			 		plt.plot(m_new,c_new,'ko')
+			 		plt.text(m_new+(increment_m/2),c_new+(increment_c/2),s=r'$\left(\alpha,\ \lnC\right)$',fontsize=20)
 			 		plt.grid(True)
 			 		plt.show()
 		 		else:
 		 			pass
 		 		
-		 	chisquaregraph(200)
+		 	chisquaregraph(50)
 
 		 name = ['Spectral Index']
 		 y_data = [alphas]
 		 #spectral_index_graph = Graphs('Spectral Index vs Times', 'Time (years)','Spectral Index (unitless)',y_error_names='Spectral Index')
-		 #spectral_index_graph.create_figure_logxory(time,error_ydata=alphas,y_error=deviations)
+		 #fig, ax = spectral_index_graph.create_figure_logxory(time,error_ydata=list(alphas),y_error=list(deviations))
+		 #plt.show()
 
 	spectral_index()
 	def luminosity2to10(): #there was a units problem. fixed 20-6-2014
@@ -243,7 +251,8 @@ def main():
 		list_of_total_luminosities = [list_of_total_luminosities]
 		name = ['Total Luminosity']
 		luminosity_graph = Graphs('Total Luminosity in 2-10 keV range vs Time','Time (years)','Luminosity (ergs/s)',name)
-		luminosity_graph.create_figure_logxory(time,list_of_total_luminosities,x_lim=[0,30000],ylog=True)
+		fig, ax = luminosity_graph.create_figure_logxory(time,list_of_total_luminosities,x_lim=[0,30000],ylog=True)
+		plt.show()
 	#luminosity2to10()
 main()
 
