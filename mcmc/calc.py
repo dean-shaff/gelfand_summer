@@ -10,6 +10,7 @@ import emcee
 import time
 import os
 import subprocess
+import sys
 #Data===========================
 radius_pwn = 40 # "
 radius_snr = 150 # "
@@ -73,6 +74,7 @@ elecstep = 0 #[optional]
 photstep = 0 #[optional]
 #Code======================
 mcmc_path = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc'
+testing_path = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc/testing'
 
 data = [d, radio1, radio2, radio3, radio4, fluxsoftx, 
 	gammasoftx, fluxhardx, gammahardx, gammagamma, gamma1] 
@@ -84,7 +86,7 @@ dataerror=[dsigma, radio1sigma, radio2sigma, radio3sigma,
 # runner.gen_output(tstep,esn,mej,nism,brakind,tau,age,e0,velpsr,etag,etab,emin,emax,ebreak,p1,p2,f_max,kT_max,nic,ictemp,icnorm)
 
 def lnlike(theta,data,dataerror,testing=False):
-	t = time.time()
+	
 	[d, radio1, radio2, radio3, radio4, fluxsoftx, 
 	gammasoftx, fluxhardx, gammahardx, gammagamma, gamma1] = data
 	[dsigma, radio1sigma, radio2sigma, radio3sigma, 
@@ -105,7 +107,7 @@ def lnlike(theta,data,dataerror,testing=False):
 		ictemp = 0 #temperature of background photon field
 		icnorm = 0 #normalization of background photon field
 		runner.gen_output(tstep,esn_,mej_,nism_,brakind_,tau_,age_,e0_,velpsr,etag_,
-			etab_,emin_,emax_,ebreak_,p1_,p2_,f_max,kT_max,nic,ictemp,icnorm)
+			etab_,emin_,emax_,ebreak_,p1_,p2_,f_max,kT_max,nic,ictemp,icnorm,directory_path=testing_path)
 	else: 
 		pass
 
@@ -114,6 +116,7 @@ def lnlike(theta,data,dataerror,testing=False):
 	elec = 'modelres.elecspec.fits'
 	
 	assert os.path.exists("{}/{}".format(mcmc_path,phot))==True, "Make sure to generate fits files!"	
+	t = time.time()
 	reader = Observables(phot,dyn,elec)
 	radio1model = reader.grab_flux_density(1.43, 'GHz', d)
 	radio2model = reader.grab_flux_density(4.7, 'GHz', d)
@@ -130,46 +133,57 @@ def lnlike(theta,data,dataerror,testing=False):
 	total = 0
 	for i in xrange(1,len(data)-1): #not including distance
 		coeff = np.log(1.0/(np.sqrt(2*np.pi)*dataerror[i]))
-		chisqr = ((model[i] - data[i])**2)/(dataerror[i])
-		total += -0.5*coeff*chisqr
+		chisqr = ((model[i-1] - data[i])**2)/(dataerror[i])
+		total += coeff*chisqr
 	
 	print('time in calculation: {}'.format(time.time()-t))
-	return total
-
+	return -0.5*total
 
 def lnprior(theta):
 	esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_,ebreak_, p1_, p2_ = theta
-	if mej_ > 0 and brakind_ > 0 and tau_ > 0 and esn_ > 0 and nism_ > 0 and etag_ > 0 and emin_ > 0 and emax_ > 0 and p1_ > 0 and p2_ > 0 and etab_ > 0:
+	if mej_ > 0 and brakind_ > 0 and tau_ > 0 and esn_ > 0 and nism_ > 0 and etag_ >= 0 and etag_ < 1 and emin_ > 0 and emax_ > 0 and p1_ > 0 and p2_ > 0 and etab_ > 0:
 		return 0 #at least until Gelfand provides me with some priors	
 	else: 
 		return -np.inf
 
+number_functioncall = []
 def lnprob(theta,data,dataerror):
-	lp = lnprior(theta)
-	if not np.isfinite(lp):
-		return -np.inf
-	return lp + lnlike(theta,data,dataerror)#[d, radio1, radio2, radio3, radio4, fluxsoftx, 
-	# gammasoftx, fluxhardx, gammahardx, gammagamma, gamma1],[dsigma, radio1sigma, radio2sigma, radio3sigma, 
-	# radio4sigma, fluxsoftxsigma, fluxhardxsigma, gammahardxsigma, 
-	# gammagammasigma, gamma1sigma])
+	number_functioncall.append(1)
+	print(len(number_functioncall))
+	if len(number_functioncall) <= 5:
+		esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_,ebreak_, p1_, p2_ = theta
+		lp = lnprior(theta)
+		if not np.isfinite(lp):
+			return -np.inf
+		return lp + lnlike(theta,data,dataerror)
+	else:
 
-def optimize_lnlike():
+		return np.nan
+		
+jump = 1
+def callbackF(theta):
+	esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_,ebreak_, p1_, p2_ = theta
+	global jump 
+	print("{} {} {} {} {} {} {} {} {} {} {} {} {}".format(jump, esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_,ebreak_, p1_, p2_))
+	jump += 1
+
+def optimize_lnprob():
 	nll = lambda *args: -lnprob(*args)
-	result = op.minimize(nll, [esn, mej, nism, brakind, tau, etag, etab, emin, emax, 
-	 ebreak, p1, p2], args=(data, dataerror),method='Powell')
+	result = op.minimize(nll, [esn, mej, nism, brakind, tau, etag, etab, emin, emax, ebreak, p1, p2],
+						 args=(data, dataerror), method='Powell',options={'disp':True,'maxfev':5},callback=callbackF)
 	esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml = result['x']
 	print result['success']
-	print -lnprob([esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml],data,dataerror)
+	print lnlike([esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml],data,dataerror)
 	return [esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml]
 
-best_fit = optimize_lnlike()
+best_fit = optimize_lnprob()
 print(best_fit)
 
-# print lnlike([esn, mej, nism, brakind, tau, etag, etab, emin, emax, 
+# print lnprob([esn, mej, nism, brakind, tau, etag, etab, emin, emax, 
 # 	ebreak, p1, p2],[d, radio1, radio2, radio3, radio4, fluxsoftx, 
 # 	gammasoftx, fluxhardx, gammahardx, gammagamma, gamma1],[dsigma, radio1sigma, radio2sigma, radio3sigma, 
 # 	radio4sigma, fluxsoftxsigma, fluxhardxsigma, gammahardxsigma, 
-# 	gammagammasigma, gamma1sigma],testing=False)
+# 	gammagammasigma, gamma1sigma])
 
 #==============================================
 def run_emcee():
@@ -179,3 +193,16 @@ def run_emcee():
 	sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob, args=(data,dataerror))
 	sampler.run_mcmc(pos, 500)
 #run_emcee()
+
+
+
+
+
+
+# theta1 = [1.7002174640867751, 8.0016364987364543, 0.99877967608877527, 1.0255358037568771, 502.58792896154586, 2.5879289615458418, 2.5889289615458417,
+#  3.5879289615458418, 10000002.587928962, 10002.587928961546, 4.0879289615458418, 5.0879289615458418]
+
+# print(lnlike(theta1,data,dataerror))
+
+# [3.5879289615458418, 10.587928961545842, 3.5879289615458418, 5.5879289615458418, 502.58792896154586, 2.5879289615458418, 2.5889289615458417, 3.5879289615458418, 10000002.587928962, 10002.587928961546, 4.0879289615458418, 5.0879289615458418]
+

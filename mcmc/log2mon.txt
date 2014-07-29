@@ -1,0 +1,80 @@
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2648.000000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2648.000000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2164.300000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=1796.800000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2164.300000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=1991.900000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2306.300000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2415.400000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2276.400000 years 
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2230.900000 years 
+time in calculation: 115.951499939
+time in calculation: 118.56845808
+time in calculation: 114.028795004
+time in calculation: 116.855855227
+time in calculation: 123.306780815
+time in calculation: 125.963219881
+time in calculation: 118.858524084
+time in calculation: 121.522014141
+time in calculation: 128.537418842
+time in calculation: 131.276550055
+time in calculation: 118.818552971
+time in calculation: 121.629043818
+time in calculation: 120.428137064
+time in calculation: 123.130282879
+time in calculation: 116.71982193
+time in calculation: 119.413717985
+time in calculation: 121.10248208
+time in calculation: 123.762817144
+time in calculation: 122.367496014
+time in calculation: 125.073913097

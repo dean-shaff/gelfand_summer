@@ -1,0 +1,18 @@
+Provided 21 parameters 
+Only outputting PWN properties at last time 
+Integral of F(x) = 1.610595 
+Energy density of background photons fields = 0.261118 eV/cm^3 
+Particle energy= 2.444e+06 2.444e+06 
+PWN collides with SNR reverse shock at t=2364.700000 years 
+time in calculation: 111.661662102
+radio1 : -4.75392162262
+radio2 : -5.04184151241
+radio3 : -4.38368025118
+radio4 : -3.13995622791
+fluxsoftx : 343.780546141
+gammasoftx : 0.0591623767621
+fluxhardx : 0.669888766449
+gammahardx : 0.410429762605
+gammagamma : -0.124090675557
+time in calculation: 114.372380018
+1182075.31623

@@ -29,13 +29,14 @@ class Output(object):
 			call = './pwnmodel.exe {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}'.format(tstep,esn,mej,
 				nism,brakind,tau,age,e0,velpsr,etag,etab,emin,emax,ebreak,p1,p2,f_max,kT_max,nic, ictemp, icnorm, dynstep, elecstep, photstep)
 		subprocess.call(call,shell=True)
+		print("time in calculation: {}".format(float(time.time()) - t))
 		if directory_path == False:
 			subprocess.call('mv *.fits {}'.format(mcmc_path),shell = True)
 			os.chdir(mcmc_path) 
 		elif directory_path != False:
 			subprocess.call('mv *.fits {}'.format(directory_path),shell = True)
 			os.chdir(directory_path) 
-		print("time in calculation: {}".format(float(time.time()) - t))
+		
 
 	def delete_fits(self):
 		os.chdir(mcmc_path)
