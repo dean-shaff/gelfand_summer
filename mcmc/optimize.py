@@ -79,6 +79,9 @@ theta_list4 = [[1, 8, 0.001, 3, 500, 0, 0.001, 1, 1000000.0, 1000.0, 1.5, 2.5],[
 theta_output = [[1, 8, 0.001, 3, 500, 0, 0.001, 1, 1000000.0, 1000.0, 1.5, 2.5],[-3.187357049359683, 10.587928961545842, 2.5889289615458417, 5.5879289615458418, 502.58792896154586, 2.5879289615458418, 2.5889289615458417, 
 				3.5879289615458418, 1000002.5879289615, 1002.5879289615458, 4.0879289615458418, 5.0879289615458418]]
 
+# theta_ml = [  2.68514901e+00   1.05701937e+01   2.58892896e+00   5.53920354e+00
+#    4.54232639e+01   2.92055684e+01   2.92065684e+01   3.02055684e+01
+#    1.00002921e+06   1.02920557e+03   3.07055684e+01   3.17055684e+01]
 # #Extra/Calculated Parameters===============
 # tstep = -1 #time step (only takes integer values) 21-6-2014 changed tstep from 1000 to 100
 # age = float(((2*char_age)/(brakind-1))-tau)#(?) age of system #says age > 29000 (?) 
@@ -114,7 +117,7 @@ def chisqr(theta): #,data,dataerror,testing=False):
 	[esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_, 
 	ebreak_, p1_, p2_] = theta
 
-	if mej_ < 0 or brakind_ < 0 or tau_ < 0 or esn_ < 0 or nism_ < 0 or etag_ <= 0 and etag_ > 1 or emin_ < 0 or emax_ < 0 or p1_ < 0 or p2_ < 0 or etab_ < 0:
+	if mej_ < 0 or brakind_ < 0 or tau_ < 0 or esn_ < 0 or nism_ < 0 or etag_ <= 0 and etag_ > 1 or emin_ < 0 or emax_ < 0 or p1_ < 0 or p2_ < 0 or etab_ < 0 or p1_ > 3:
 		print("Parameters out of range")
 		return np.inf
 
@@ -158,17 +161,17 @@ def chisqr(theta): #,data,dataerror,testing=False):
 		gammasoftxmodel,fluxhardxmodel,gammahardxmodel,gammagammamodel,gamma1model]
 	total = 0
 	list_of_differences = []
-	for i in xrange(1,len(data)-1): #not including distance
-		print("{} : {}".format(data_names[i-1],model[i-1]-data[i]))
-		list_of_differences.append(model[i-1]-data[i])
-		chisqr = ((model[i-1] - data[i])**2)/(dataerror[i])
-		lncoeff = np.log(1.0/(np.sqrt(2*np.pi)*dataerror[i]))
-		print(lncoeff)
-		total += chisqr
-	print(theta)
-	print('time in calculation: {}'.format(time.time()-t))
-	print(total)
-	return total#, list_of_differences
+	with open('log1wed.txt','a') as file1:
+		for i in xrange(1,len(data)-1): #not including distance
+			file1.write("{} : {}\n".format(data_names[i-1],model[i-1]-data[i]))
+			list_of_differences.append(model[i-1]-data[i])
+			chisqr = ((model[i-1] - data[i])**2)/(dataerror[i])
+			lncoeff = np.log(1.0/(np.sqrt(2*np.pi)*dataerror[i]))
+			total += chisqr*lncoeff
+		file1.write("{}\n".format(theta))
+	#print('time in calculation: {}'.format(time.time()-t))
+		file1.write("{}\n\n".format(0.5*total))
+	return 0.5*total#, list_of_differences #I want to minimize the negative liklihood...
 
 # with open('log5tues.txt','w') as file1:
 # 	for i in theta_output:

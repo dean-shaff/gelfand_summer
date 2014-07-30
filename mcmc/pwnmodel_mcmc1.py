@@ -182,13 +182,16 @@ class Observables(object):
 			dataphot2 = filephot[2].data
 			avfreq = np.array(dataphot1.field(3))
 			avenerg = avfreq*h_special
+			# lower_con = avenerg >= float(lower)
+			# upper_con = avenerg <= float(upper)
 			t = 0
 			indices = []
 			while t < avenerg.size:
 				if avenerg[t] >= float(lower) and avenerg[t] <= float(upper):
 					indices.append(int(t))
 				t+=1
-			luminosities = np.array([float(dataphot2.field(i)) for i in indices])
+			luminosities = np.array([float(dataphot2.field(i)) for i in indices])#xrange(0,avenerg.size-1)])
+			# luminosities = luminosities[lower_con*upper_con]
 			distance = d*u.kpc.to(u.cm)
 			unit_flux = (10**40*u.erg)/(u.s*u.Hz*(u.cm**2)*4*np.pi*(distance**2)) 
 			#flux_units converts from total flux to flux density
