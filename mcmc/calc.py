@@ -146,20 +146,14 @@ def lnprior(theta):
 	else: 
 		return -np.inf
 
-number_functioncall = []
-def lnprob(theta,data,dataerror):
-	number_functioncall.append(1)
-	print(len(number_functioncall))
-	if len(number_functioncall) <= 5:
-		esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_,ebreak_, p1_, p2_ = theta
-		lp = lnprior(theta)
-		if not np.isfinite(lp):
-			return -np.inf
-		return lp + lnlike(theta,data,dataerror)
-	else:
 
-		return np.nan
-		
+def lnprob(theta,data,dataerror):	
+	esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_,ebreak_, p1_, p2_ = theta
+	lp = lnprior(theta)
+	if not np.isfinite(lp):
+		return -np.inf
+	return lp + lnlike(theta,data,dataerror)
+
 jump = 1
 def callbackF(theta):
 	esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_,ebreak_, p1_, p2_ = theta
@@ -176,8 +170,8 @@ def optimize_lnprob():
 	print lnlike([esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml],data,dataerror)
 	return [esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml]
 
-best_fit = optimize_lnprob()
-print(best_fit)
+# best_fit = optimize_lnprob()
+# print(best_fit)
 
 # print lnprob([esn, mej, nism, brakind, tau, etag, etab, emin, emax, 
 # 	ebreak, p1, p2],[d, radio1, radio2, radio3, radio4, fluxsoftx, 
@@ -186,13 +180,18 @@ print(best_fit)
 # 	gammagammasigma, gamma1sigma])
 
 #==============================================
+theta_ml = [2.94514624e+00,   1.05880585e+01,   2.58892896e+00,   5.69921498e+00,
+   4.86135285e+02,   2.92055684e+01,   2.92065684e+01,   3.02055684e+01,
+   1.00002921e+06,   1.02920557e+03,   1.50000000e+00,   3.17055684e+01]
+
 def run_emcee():
 	ndim, nwalkers = 12, 100
-	pos = [[esn, mej, nism, brakind, tau, etag, etab, emin, emax, 
-		ebreak, p1, p2] + 1e-4*np.random.randn(ndim) for i in range(nwalkers)]
+	pos = [[2.94514624e+00,   1.05880585e+01,   2.58892896e+00,   5.69921498e+00,
+   4.86135285e+02,   2.92055684e+01,   2.92065684e+01,   3.02055684e+01,
+   1.00002921e+06,   1.02920557e+03,   1.50000000e+00,   3.17055684e+01] + 1e-4*np.random.randn(ndim) for i in range(nwalkers)]
 	sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob, args=(data,dataerror))
 	sampler.run_mcmc(pos, 500)
-#run_emcee()
+run_emcee()
 
 
 
