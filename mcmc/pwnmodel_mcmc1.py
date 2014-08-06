@@ -1,4 +1,4 @@
-#program that runs pwn model
+#program that runs pwn model and calculates various quanitities
 import os
 import subprocess
 import time
@@ -11,7 +11,7 @@ from numpy import linalg
 import time
 #=========================================
 path_to_pwn = '/home/dean/gelfand_pwn'
-mcmc_path = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc'
+path_default = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc/default_fits'
 
 #=========================================
 class Output(object):
@@ -31,8 +31,8 @@ class Output(object):
 		subprocess.call(call,shell=True)
 		print("time in calculation: {}".format(float(time.time()) - t))
 		if directory_path == False:
-			subprocess.call('mv *.fits {}'.format(mcmc_path),shell = True)
-			os.chdir(mcmc_path) 
+			subprocess.call('mv *.fits {}'.format(path_default),shell = True)
+			os.chdir(path_default) 
 		elif directory_path != False:
 			subprocess.call('mv *.fits {}'.format(directory_path),shell = True)
 			os.chdir(directory_path) 

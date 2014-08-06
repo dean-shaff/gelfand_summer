@@ -1,3 +1,8 @@
+'''
+I've since moved everything from this file to "optimize.py!" As of 30/7/2014
+'''
+
+
 from pwnmodel_mcmc1 import Output
 from pwnmodel_mcmc1 import Observables
 import numpy as np 

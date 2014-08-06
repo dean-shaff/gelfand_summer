@@ -82,22 +82,13 @@ theta_output = [[1, 8, 0.001, 3, 500, 0, 0.001, 1, 1000000.0, 1000.0, 1.5, 2.5],
 # theta_ml = [  2.68514901e+00   1.05701937e+01   2.58892896e+00   5.53920354e+00
 #    4.54232639e+01   2.92055684e+01   2.92065684e+01   3.02055684e+01
 #    1.00002921e+06   1.02920557e+03   3.07055684e+01   3.17055684e+01]
-# #Extra/Calculated Parameters===============
-# tstep = -1 #time step (only takes integer values) 21-6-2014 changed tstep from 1000 to 100
-# age = float(((2*char_age)/(brakind-1))-tau)#(?) age of system #says age > 29000 (?) 
-# e0 = float(edot*(1+(age/tau))**((brakind+1)/(brakind-1))) #initial spin-down luminosity (10^37 ergs/s)
-# velpsr = 0 #update 16-6-2014 - velocity is zero
-# f_max = 0 #fraction in maxwellian component
-# kT_max = 0 #energy of maxwellian component
-# nic = 0 #number of background photon field
-# ictemp = 0 #temperature of background photon field
-# icnorm = 0 #normalization of background photon field
-# dynstep = 0 #[optional]
-# elecstep = 0 #[optional]
-# photstep = 0 #[optional]
 #Code======================
 mcmc_path = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc'
-testing_path = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc/testing'
+path_default = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc/default_fits'
+path1 = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc/testing1'
+path2 = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc/testing2'
+path3 = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc/testing3'
+path4 = '/home/dean/python_stuff_ubuntu/gelfand_summer/mcmc/testing4'
 
 data = [d, radio1, radio2, radio3, radio4, fluxsoftx, 
 	gammasoftx, fluxhardx, gammahardx, gammagamma, gamma1] 
@@ -107,7 +98,10 @@ dataerror=[dsigma, radio1sigma, radio2sigma, radio3sigma,
 	radio4sigma, fluxsoftxsigma, fluxhardxsigma, gammahardxsigma, 
 	gammagammasigma, gamma1sigma] 
 
-def chisqr(theta): #,data,dataerror,testing=False):
+def neglikelihood(theta,directory): 
+	'''
+	This function returns the negative loglikelihood. 
+	'''
 	data = [d, radio1, radio2, radio3, radio4, fluxsoftx, 
 	gammasoftx, fluxhardx, gammahardx, gammagamma, gamma1] 
 	dataerror = [dsigma, radio1sigma, radio2sigma, radio3sigma, 
@@ -117,10 +111,11 @@ def chisqr(theta): #,data,dataerror,testing=False):
 	[esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_, 
 	ebreak_, p1_, p2_] = theta
 
-	if mej_ < 0 or brakind_ < 0 or tau_ < 0 or esn_ < 0 or nism_ < 0 or etag_ <= 0 and etag_ > 1 or emin_ < 0 or emax_ < 0 or p1_ < 0 or p2_ < 0 or etab_ < 0 or p1_ > 3:
+	if mej_ < 0 or brakind_ < 0 or tau_ < 0 or esn_ < 0 or nism_ < 0 or etag_ < 0 or etag_ >= 1 or emin_ < 0 or emax_ < 0 or p1_ < 0 or p2_ < 0 or etab_ < 0 or p1_ > 3:
 		print("Parameters out of range")
 		return np.inf
 
+	assert etag_ >= 0 and etag_ < 1, "Make sure eta g is correct!"
 	runner = Output()
 	age_ = float(((2*char_age)/(brakind_-1))-tau_)#(?) age of system #says age > 29000 (?) 
 	e0_ = float(edot*(1+(age_/tau_))**((brakind_+1)/(brakind_-1))) #initial spin-down luminosity (10^37 ergs/s)
@@ -136,14 +131,8 @@ def chisqr(theta): #,data,dataerror,testing=False):
 	dyn = 'modelres.dyninfo.fits'
 	elec = 'modelres.elecspec.fits'
 
-	# if testing == True:
-	# 	runner.gen_output(tstep,esn_,mej_,nism_,brakind_,tau_,age_,e0_,velpsr,etag_,
-	# 		etab_,emin_,emax_,ebreak_,p1_,p2_,f_max,kT_max,nic,ictemp,icnorm,directory_path=testing_path)
-	# 	assert os.path.exists("{}/{}".format(testing_path,phot))==True, "Make sure to generate fits files!"
-
-	# elif testing == False:
 	runner.gen_output(tstep,esn_,mej_,nism_,brakind_,tau_,age_,e0_,velpsr,etag_,
-		etab_,emin_,emax_,ebreak_,p1_,p2_,f_max,kT_max,nic,ictemp,icnorm,directory_path=mcmc_path)	
+		etab_,emin_,emax_,ebreak_,p1_,p2_,f_max,kT_max,nic,ictemp,icnorm,directory_path=directory)	
 	assert os.path.exists("{}/{}".format(mcmc_path,phot))==True, "Make sure to generate fits files!"
 	t = time.time()
 	reader = Observables(phot,dyn,elec)
@@ -161,7 +150,7 @@ def chisqr(theta): #,data,dataerror,testing=False):
 		gammasoftxmodel,fluxhardxmodel,gammahardxmodel,gammagammamodel,gamma1model]
 	total = 0
 	list_of_differences = []
-	with open('log1wed.txt','a') as file1:
+	with open('log1wedaugust.txt','a') as file1:
 		for i in xrange(1,len(data)-1): #not including distance
 			file1.write("{} : {}\n".format(data_names[i-1],model[i-1]-data[i]))
 			list_of_differences.append(model[i-1]-data[i])
@@ -173,13 +162,8 @@ def chisqr(theta): #,data,dataerror,testing=False):
 		file1.write("{}\n\n".format(0.5*total))
 	return 0.5*total#, list_of_differences #I want to minimize the negative liklihood...
 
-# with open('log5tues.txt','w') as file1:
-# 	for i in theta_output:
-# 		print(i)
-# 		chisqur, listdiff = chisqr(i,data,dataerror)
-# 		print(chisqur)
-# 		file1.write('{}\n'.format(i))
-# 		file1.write('{}\n{}\n\n'.format(chisqur, listdiff))
+theta_tester = [1,15,0.001,3,500,0,0.001,1,1e6,1e3,1.5,2.5]
+print(neglikelihood(theta_tester,path_default))
 
 jump = 1
 def callbackF(theta):
@@ -188,14 +172,31 @@ def callbackF(theta):
 	print("{} {} {} {} {} {} {} {} {} {} {} {} {}".format(jump, esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_,ebreak_, p1_, p2_))
 	jump += 1
 
-def optimize_chisqr():
-	#nll = lambda *args: chisqr(*args)
-	result = op.minimize(chisqr, [esn, mej, nism, brakind, tau, etag, etab, emin, emax, ebreak, p1, p2],
+def optimize_neglikelihood(theta, path):
+	path = str(path)
+	[esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_, ebreak_, p1_, p2_] = theta
+	nll = lambda *args: neglikelihood(*args)
+	result = op.minimize(nll, [esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_, ebreak_, p1_, p2_], args=(path, ),
 						method='Powell',options={'disp':True},callback=callbackF)
 	esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml = result['x']
 	print result['success']
-	print chisqr([esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml])
+	print neglikelihood([esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml])
 	return [esn_ml, mej_ml, nism_ml, brakind_ml, tau_ml, etag_ml, etab_ml, emin_ml, emax_ml,ebreak_ml, p1_ml, p2_ml]
 
-best_fit = optimize_chisqr()
-print(best_fit)
+#optimize_neglikelihood([esn, mej, nism, brakind, tau, etag, etab, emin, emax, ebreak, p1, p2],path_default)
+
+# best_fit = optimize_chisqr()
+# print(best_fit)
+
+#==============================================
+theta_ml = [2.94514624e+00,   1.05880585e+01,   2.58892896e+00,   5.69921498e+00,
+   4.86135285e+02,   2.92055684e+01,   2.92065684e+01,   3.02055684e+01,
+   1.00002921e+06,   1.02920557e+03,   1.50000000e+00,   3.17055684e+01]
+
+# def run_emcee():
+# 	ndim, nwalkers = 12, 100
+# 	pos = [[2.94514624e+00,   1.05880585e+01,   2.58892896e+00,   5.69921498e+00,
+#    4.86135285e+02,   2.92055684e+01,   2.92065684e+01,   3.02055684e+01,
+#    1.00002921e+06,   1.02920557e+03,   1.50000000e+00,   3.17055684e+01] + 1e-4*np.random.randn(ndim) for i in range(nwalkers)]
+# 	sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob, args=(data,dataerror))
+# 	sampler.run_mcmc(pos, 500)
