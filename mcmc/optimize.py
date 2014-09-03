@@ -111,11 +111,12 @@ def neglikelihood(theta,directory):
 	[esn_, mej_, nism_, brakind_, tau_, etag_, etab_, emin_, emax_, 
 	ebreak_, p1_, p2_] = theta
 
-	if mej_ < 0 or brakind_ < 0 or tau_ < 0 or esn_ < 0 or nism_ < 0 or etag_ < 0 or etag_ >= 1 or emin_ < 0 or emax_ < 0 or p1_ < 0 or p2_ < 0 or etab_ < 0 or p1_ > 3:
+	if mej_ < 0 or brakind_ < 0 or tau_ < 0 or esn_ < 0 or nism_ < 0 or etag_ < 0 or etag_ >= 1 or emin_ < 0 or emax_ < 0 or p1_ < 0 or p2_ < 0 or etab_ < 0 or etab_ > 1 or p1_ > 3:
 		print("Parameters out of range")
 		return np.inf
 
 	assert etag_ >= 0 and etag_ < 1, "Make sure eta g is correct!"
+	assert etab_ >= 0 and etab_ < 1, "Make sure etab is correct!"
 	runner = Output()
 	age_ = float(((2*char_age)/(brakind_-1))-tau_)#(?) age of system #says age > 29000 (?) 
 	e0_ = float(edot*(1+(age_/tau_))**((brakind_+1)/(brakind_-1))) #initial spin-down luminosity (10^37 ergs/s)
@@ -132,7 +133,7 @@ def neglikelihood(theta,directory):
 	elec = 'modelres.elecspec.fits'
 
 	runner.gen_output(tstep,esn_,mej_,nism_,brakind_,tau_,age_,e0_,velpsr,etag_,
-		etab_,emin_,emax_,ebreak_,p1_,p2_,f_max,kT_max,nic,ictemp,icnorm,directory_path=directory)	
+		etab_,emin_,emax_,ebreak_,p1_,p2_,f_max,kT_max,nic,ictemp,icnorm,directory_path=directory,speedup=True)	
 	assert os.path.exists("{}/{}".format(mcmc_path,phot))==True, "Make sure to generate fits files!"
 	t = time.time()
 	reader = Observables(phot,dyn,elec)
@@ -162,8 +163,8 @@ def neglikelihood(theta,directory):
 		file1.write("{}\n\n".format(0.5*total))
 	return 0.5*total#, list_of_differences #I want to minimize the negative liklihood...
 
-theta_tester = [1,15,0.001,3,500,0,0.001,1,1e6,1e3,1.5,2.5]
-print(neglikelihood(theta_tester,path_default))
+# theta_tester = [1,15,0.001,3,500,0,0.001,1,1e6,1e3,1.5,2.5]
+# print(neglikelihood(theta_tester,path_default))
 
 jump = 1
 def callbackF(theta):
@@ -193,10 +194,20 @@ theta_ml = [2.94514624e+00,   1.05880585e+01,   2.58892896e+00,   5.69921498e+00
    4.86135285e+02,   2.92055684e+01,   2.92065684e+01,   3.02055684e+01,
    1.00002921e+06,   1.02920557e+03,   1.50000000e+00,   3.17055684e+01]
 
-# def run_emcee():
-# 	ndim, nwalkers = 12, 100
-# 	pos = [[2.94514624e+00,   1.05880585e+01,   2.58892896e+00,   5.69921498e+00,
-#    4.86135285e+02,   2.92055684e+01,   2.92065684e+01,   3.02055684e+01,
-#    1.00002921e+06,   1.02920557e+03,   1.50000000e+00,   3.17055684e+01] + 1e-4*np.random.randn(ndim) for i in range(nwalkers)]
-# 	sampler = emcee.EnsembleSampler(nwalkers, ndim, lnprob, args=(data,dataerror))
-# 	sampler.run_mcmc(pos, 500)
+# print(neglikelihood(theta_ml,path_default))
+
+def run_emcee(directory):
+	ndim, nwalkers = 12, 100
+	pos = [np.array(theta_ml) + 1e-4*np.random.randn(ndim) for i in range(nwalkers)]
+	sampler = emcee.EnsembleSampler(nwalkers, ndim, neglikelihood, args=(str(directory), ))
+	# sampler.run_mcmc(pos, 500)
+	for result in sampler.sample(pos, iterations=500, storechain=False):
+		position = result[0]
+		print(position)
+		# f = open("chain.dat", "a")
+		# for k in range(position.shape[0]):
+		# 	# f.write("{}\n".format(k))
+		# 	f.write("{} {}\n".format(k, " ".join(position[k])))
+		# f.close()
+
+# run_emcee(path_default)
