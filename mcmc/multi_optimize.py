@@ -1,4 +1,9 @@
 #multiprocessing optimization 
+"""
+This program uses Python's multiprocessing module to run the optimizaton routine 4 times simultaneously. 
+It uses 4 different starting parameters, and then dumps the text file containing the log and the .fits files in the directory specified in each run. 
+
+"""
 from multiprocessing import Process
 from pwnmodel_mcmc1 import Output
 from pwnmodel_mcmc1 import Observables

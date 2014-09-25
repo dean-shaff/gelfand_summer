@@ -4,7 +4,6 @@ certain parameters in his code to try and speed things up.
 I'm going to start by making a baseline graph of radius vs time. 
 
 pwnmodel.exe tstep esn mej nism brakind tau age e0 velpsr etag etab emin emax ebreak p1 p2 f_max kT_max nic ictemp(s) icnorm(s) [dynstep elecstep photstep]
-
 '''
 import matplotlib.pyplot as plt
 
